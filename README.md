@@ -1,11 +1,24 @@
 # Fish Audio SDK
 
-JavaScript/TypeScript SDK for [Fish Audio API](https://docs.fish.audio).
+> **Note:** An official fish.audio JS library has been released: [fish-audio](https://www.npmjs.com/package/fish-audio). This SDK remains maintained with additional features and fixes.
+
+Unofficial JavaScript/TypeScript SDK for [Fish Audio API](https://docs.fish.audio).
+
+## Changelog
+
+### v2025.11.29
+- **Fixed:** Voice model creation (`createModel`) now works correctly in Node.js environments
+- **Fixed:** Replaced browser `Blob` API with Node.js-compatible `form-data` package for file uploads
+- **Fixed:** Added proper multipart/form-data headers for model creation and updates
 
 ## Install
 
 ```bash
 npm install fish-audio-sdk
+# or
+bun add fish-audio-sdk
+# or  
+yarn add fish-audio-sdk
 ```
 
 ## Usage

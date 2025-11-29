@@ -4,6 +4,7 @@ import { HttpCodeError } from './exceptions';
 import msgpack from 'msgpack-lite';
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
+import FormData from 'form-data';
 
 export class Session {
   private client: AxiosInstance;
@@ -162,13 +163,19 @@ export class Session {
   async createModel(params: ModelCreateParams): Promise<ModelEntity> {
     const formData = new FormData();
     
-    // Add file data
+    // Add file data - use Buffer directly for Node.js compatibility
     params.voices.forEach((voice, i) => {
-      formData.append('voices', new Blob([voice]));
+      formData.append('voices', voice, {
+        filename: `voice_${i}.wav`,
+        contentType: 'audio/wav'
+      });
     });
     
     if (params.coverImage) {
-      formData.append('cover_image', new Blob([params.coverImage]));
+      formData.append('cover_image', params.coverImage, {
+        filename: 'cover.png',
+        contentType: 'image/png'
+      });
     }
 
     // Add other fields
@@ -181,7 +188,11 @@ export class Session {
     if (params.tags) params.tags.forEach(tag => formData.append('tags', tag));
     formData.append('enhance_audio_quality', String(params.enhanceAudioQuality ?? true));
 
-    const response = await this.client.post('/model', formData);
+    const response = await this.client.post('/model', formData, {
+      headers: {
+        ...formData.getHeaders()
+      }
+    });
     return {
       ...response.data,
       id: response.data._id || response.data.id
@@ -196,7 +207,10 @@ export class Session {
     const formData = new FormData();
     
     if (params.coverImage) {
-      formData.append('cover_image', new Blob([params.coverImage]));
+      formData.append('cover_image', params.coverImage, {
+        filename: 'cover.png',
+        contentType: 'image/png'
+      });
     }
 
     if (params.title) formData.append('title', params.title);
@@ -204,7 +218,11 @@ export class Session {
     if (params.visibility) formData.append('visibility', params.visibility);
     if (params.tags) params.tags.forEach(tag => formData.append('tags', tag));
 
-    await this.client.patch(`/model/${modelId}`, formData);
+    await this.client.patch(`/model/${modelId}`, formData, {
+      headers: {
+        ...formData.getHeaders()
+      }
+    });
   }
 
   async getApiCredit(params: ApiCreditParams = {}): Promise<APICreditEntity> {

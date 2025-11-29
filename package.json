@@ -1,6 +1,6 @@
 {
   "name": "fish-audio-sdk",
-  "version": "2025.06.08",
+  "version": "2025.11.29",
   "description": "fish.audio platform api sdk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/msgpack-lite": "^0.1.11",
     "axios": "^1.7.9",
+    "form-data": "^4.0.0",
     "msgpack-lite": "^0.1.26",
     "ws": "^8.18.0",
     "zod": "^3.24.1"
